@@ -15,8 +15,8 @@ class LoginGUI extends JFrame implements ActionListener {
 	// 유저의 로그인 창
 	private JPanel Login_GUIPanel = new JPanel();
 	private JTextField NickName_Text = new JTextField(20);
-	private JTextField Port_Text = new JTextField("####", 20);
-	private JTextField IPAddress_Text = new JTextField("###.###.###.###", 20);
+	private JTextField Port_Text = new JTextField("", 20);
+	private JTextField IPAddress_Text = new JTextField("", 20);
 	private JLabel NickName_Label = new JLabel("유저 입력");
 	private JLabel Port_Label = new JLabel("포트 입력");
 	private JLabel IPAddress_Label = new JLabel("주소 입력");
@@ -27,6 +27,7 @@ class LoginGUI extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setSize(300, 170);
+		setResizable(false);
 		setVisible(true);
 		Login_GUI_Button.setPreferredSize(new Dimension(260, 40));
 		Login_GUI_Button.addActionListener(this);
