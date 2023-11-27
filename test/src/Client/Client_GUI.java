@@ -27,7 +27,6 @@ class LoginGUI extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setSize(300, 170);
-		setResizable(false);
 		setVisible(true);
 		Login_GUI_Button.setPreferredSize(new Dimension(260, 40));
 		Login_GUI_Button.addActionListener(this);
