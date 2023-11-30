@@ -19,7 +19,7 @@ public class GameServer {
 	public GameServer() {
 		try {
 			// 서버 소켓의 포트를 '3000'으로 설정.
-			serverSocket = new ServerSocket(3000);
+			serverSocket = new ServerSocket(9191);
 			vcClient = new Vector<>();
 			while (true) {
 				System.out.println("클라이언트 요청 대기중.....");
@@ -81,7 +81,6 @@ public class GameServer {
 					protocolSTART();
 					protocolTURN();
 					protocolDraw(parsReaderMsg);
-					protocolColor(parsReaderMsg);
 				}
 			} catch (Exception e) {
 				System.out.println(TAG + "메세지 통신 실패.");
@@ -92,12 +91,12 @@ public class GameServer {
 		// 모든 클라이언트에게 모든 [아이디] [SCORE]값을 출력.
 		private void protocolRESULT() {
 			for (int i = 0; i < vcClient.size(); i++) {
-				vcClient.get(i).writer.println("END&*****RESERT*****");
+				vcClient.get(i).writer.println("END&*****RESULT*****");
 				for (int j = 0; j < vcClient.size(); j++) {
 					vcClient.get(i).writer.println(
 							"END&[" + vcClient.get(j).clientId + "] is SCORE => [" + vcClient.get(j).score + "]");
 				}
-				vcClient.get(i).writer.println("END&*****RESERT*****");
+				vcClient.get(i).writer.println("END&*****RESULT*****");
 			}
 		}
 
@@ -310,18 +309,6 @@ public class GameServer {
 				for(int i = 0; i < vcClient.size(); i++) {
 					if (vcClient.get(i) != this) {
 						vcClient.get(i).writer.println("DRAW&"+ parsReaderMsg[1]);
-						}
-					}
-				}
-			}
-		
-		private void protocolColor(String[] parsReaderMsg) {
-			if (parsReaderMsg[0].equals("COLOR")) {
-				System.out.println("서버 칼라요청 메시지 들어옴");
-				for(int i = 0; i < vcClient.size(); i++) {
-					if (vcClient.get(i) != this) {
-						vcClient.get(i).writer.println("COLOR&"+ parsReaderMsg[1]);
-						System.out.println("칼라변경 메시지 보냄");
 						}
 					}
 				}

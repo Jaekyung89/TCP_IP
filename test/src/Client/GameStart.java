@@ -1,37 +1,16 @@
 // 최종본
 package Client;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 public class GameStart extends JFrame {
 	// 필수 태그
@@ -44,15 +23,6 @@ public class GameStart extends JFrame {
 	public int selectProblem = 0;
 
 	private ImageIcon icGameStart;
-
-	private ImageIcon iconBlackPen;
-	private ImageIcon iconRedPen;
-	private ImageIcon iconOrangePen;
-	private ImageIcon iconYellowPen;
-	private ImageIcon iconGreenPen;
-	private ImageIcon iconBluePen;
-	private ImageIcon iconIndigoPen;
-	private ImageIcon iconPurplePen;
 
 	// 통신
 	private Socket socket;
@@ -104,17 +74,6 @@ public class GameStart extends JFrame {
 	// plBottom에 포함됨
 	private MyPanel2 plPalette; // 크레파스 이미지
 
-	private JButton btnBlackDrawPen;
-	private JButton btnRedDrawPen;
-	private JButton btnOrangeDrawPen;
-	private JButton btnYellowDrawPen;
-	private JButton btnGreenDrawPen;
-	private JButton btnBlueDrawPen;
-	private JButton btnIndigoDrawPen;
-	private JButton btnPurpleDrawPen;
-
-	private MyButton btnEraser; // 지우개 이미지
-
 	// 오른쪽 유저목록, 채팅, 준비완료, 나가기 버튼
 	private JPanel plEast;
 
@@ -153,7 +112,7 @@ public class GameStart extends JFrame {
 	private Brush brush;
 	String sendDraw = null;
 	String sendColor = null;
-	boolean drawPPAP = true;
+	boolean draw = true;
 
 	// 이미지 매서드
 	private ImageIcon ImageSetSize(ImageIcon icon, int width, int heigth) {
@@ -194,17 +153,6 @@ public class GameStart extends JFrame {
 		}
 	};
 
-	class MyButton extends JButton {
-		private ImageIcon icon = new ImageIcon("img/drawEraser.png");
-		private Image imgMain = icon.getImage();
-
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(imgMain, 0, 0, getWidth(), getHeight(), null);
-			setBorderPainted(false); // 버튼 테두리 제거
-		}
-	};
-
 	class MyButton1 extends JButton {
 		private ImageIcon icon = new ImageIcon("img/allDelete.png");
 		private Image imgMain = icon.getImage();
@@ -229,7 +177,6 @@ public class GameStart extends JFrame {
 		plMain = new MyPanel(); // 초기 메인 화면 이미지
 		plTopMpId = new MyPanel1(); // plMplId - 그림판 이미지
 		plPalette = new MyPanel2(); // plBottom - 크레파스 이미지
-		btnEraser = new MyButton(); // plBottom - 지우개 이미지
 		btnDelete = new MyButton1(); // plBottom - 휴지통 이미지
 
 		// 패널
@@ -250,30 +197,12 @@ public class GameStart extends JFrame {
 		// 이미지
 		icGameStart = new ImageIcon("img/gameStart.png"); // 게임시작 버튼 이미지
 
-		iconBlackPen = new ImageIcon("img/drawBlackPen.png");
-		iconRedPen = new ImageIcon("img/drawRedPen.png");
-		iconOrangePen = new ImageIcon("img/drawOrangePen.png");
-		iconYellowPen = new ImageIcon("img/drawYellowPen.png");
-		iconGreenPen = new ImageIcon("img/drawGreenPen.png");
-		iconBluePen = new ImageIcon("img/drawBluePen.png");
-		iconIndigoPen = new ImageIcon("img/drawIndigoPen.png");
-		iconPurplePen = new ImageIcon("img/drawPurplePen.png");
-
 		// 버튼
 		btnStart = new JButton(icGameStart); // plMain
 		btnId = new JButton(icGameStart); // plMain
 		btnSkip = new JButton("넘기기"); // plTop
 		btnReady = new JButton("준비"); // plEast
 		btnExit = new JButton("나가기"); // plEast
-
-		btnBlackDrawPen = new JButton(iconBlackPen);
-		btnRedDrawPen = new JButton(iconRedPen);
-		btnOrangeDrawPen = new JButton(iconOrangePen);
-		btnYellowDrawPen = new JButton(iconYellowPen);
-		btnGreenDrawPen = new JButton(iconGreenPen);
-		btnBlueDrawPen = new JButton(iconBluePen);
-		btnIndigoDrawPen = new JButton(iconIndigoPen);
-		btnPurpleDrawPen = new JButton(iconPurplePen);
 
 		// 라벨
 		laId = new JLabel("아이디"); // plMain
@@ -363,47 +292,6 @@ public class GameStart extends JFrame {
 		plBottom.setBackground(new Color(242, 242, 242, 255));
 		plBottom.setBounds(0, 530, 700, 130); // plBottom 위치, 크기 조정 좌표는 plDrawRoom 기준
 
-		iconBlackPen = ImageSetSize(iconBlackPen, 65, 130);
-		iconRedPen = ImageSetSize(iconRedPen, 65, 130);
-		iconOrangePen = ImageSetSize(iconOrangePen, 65, 130);
-		iconYellowPen = ImageSetSize(iconYellowPen, 65, 130);
-		iconGreenPen = ImageSetSize(iconGreenPen, 65, 130);
-		iconBluePen = ImageSetSize(iconBluePen, 65, 130);
-		iconIndigoPen = ImageSetSize(iconIndigoPen, 65, 130);
-		iconPurplePen = ImageSetSize(iconPurplePen, 65, 130);
-
-		btnBlackDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnBlackDrawPen.setBounds(0, 0, 65, 130);
-		btnBlackDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnRedDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnRedDrawPen.setBounds(65, 0, 65, 130);
-		btnRedDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnOrangeDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnOrangeDrawPen.setBounds(130, 0, 65, 130);
-		btnOrangeDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnYellowDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnYellowDrawPen.setBounds(195, 0, 65, 130);
-		btnYellowDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnGreenDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnGreenDrawPen.setBounds(260, 0, 65, 130);
-		btnGreenDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnBlueDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnBlueDrawPen.setBounds(325, 0, 65, 130);
-		btnBlueDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnIndigoDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnIndigoDrawPen.setBounds(390, 0, 65, 130);
-		btnIndigoDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
-		btnPurpleDrawPen.setBackground(new Color(242, 242, 242, 255));
-		btnPurpleDrawPen.setBounds(455, 0, 65, 130);
-		btnPurpleDrawPen.setBorderPainted(false); // 버튼 테두리 제거
-
 		// plDrawRoom - plEast
 		plEast.setLayout(null);
 		plEast.setBounds(750, 0, 255, 530); // plEast 위치, 크기 조정 좌표는 plDrawRoom 기준
@@ -426,9 +314,6 @@ public class GameStart extends JFrame {
 		plPalette.setLayout(null);
 		plPalette.setBackground(new Color(242, 242, 242, 255));
 		plPalette.setBounds(0, 0, 520, 130); // plPalette 위치, 크기 조정 좌표는 plBottom 기준
-
-		btnEraser.setBackground(new Color(242, 242, 242, 255));
-		btnEraser.setBounds(520, 0, 80, 130); // btnEraser 위치, 크기 조정 좌표는 plBottom 기준
 
 		btnDelete.setBackground(new Color(242, 242, 242, 255));
 		btnDelete.setBounds(600, 0, 100, 130); // btnEraser 위치, 크기 조정 좌표는 plBottom 기준
@@ -516,17 +401,7 @@ public class GameStart extends JFrame {
 //		plMplId.add(plDraw);
 
 		plBottom.add(plPalette);
-		plBottom.add(btnEraser);
 		plBottom.add(btnDelete);
-
-		plPalette.add(btnBlackDrawPen);
-		plPalette.add(btnRedDrawPen);
-		plPalette.add(btnOrangeDrawPen);
-		plPalette.add(btnYellowDrawPen);
-		plPalette.add(btnGreenDrawPen);
-		plPalette.add(btnBlueDrawPen);
-		plPalette.add(btnIndigoDrawPen);
-		plPalette.add(btnPurpleDrawPen);
 
 		plEast.add(plChat);
 		plEast.add(taUserList);
@@ -615,8 +490,8 @@ public class GameStart extends JFrame {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if (drawPPAP == true) {
-					System.out.println("ppap true 실행 됨");
+				if (draw == true) {
+					System.out.println(" true 실행 됨");
 					sendDraw = "DRAW&" + e.getX() + "," + e.getY();
 					brush.xx = e.getX();
 					brush.yy = e.getY();
@@ -624,110 +499,11 @@ public class GameStart extends JFrame {
 					brush.printAll(imgBuff.getGraphics());
 					writer.println(sendDraw);
 				} else {
-					System.out.println("ppap false 실행 됨");
+					System.out.println(" false 실행 됨");
 				}
 			}
 		});
-
-		// 검은색 펜 이벤트
-		btnBlackDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Black";
-				brush.setColor(Color.BLACK);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 빨간색 펜 이벤트
-		btnRedDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Red";
-				brush.setColor(Color.RED);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 오렌지색 펜 이벤트
-		btnOrangeDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Orange";
-				brush.setColor(Color.ORANGE);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 노란색 펜 이벤트
-		btnYellowDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Yellow";
-				brush.setColor(Color.YELLOW);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 초록색 펜 이벤트
-		btnGreenDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Green";
-				brush.setColor(Color.GREEN);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 하늘색 펜 이벤트
-		btnBlueDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Blue";
-				brush.setColor(Color.CYAN);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 파란색 펜 이벤트
-		btnIndigoDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Indigo";
-				brush.setColor(Color.BLUE);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 핑크색 펜 이벤트
-		btnPurpleDrawPen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "Purple";
-				brush.setColor(Color.PINK);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
-		// 지우개(흰색) 이벤트
-		btnEraser.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendColor = "COLOR&" + "White";
-				brush.setColor(Color.WHITE);
-				writer.println(sendColor);
-				System.out.println("색 변경 : " + sendColor);
-			}
-		});
+		
 		// 드로우 캔버스 초기화 이벤트
 		btnDelete.addActionListener(new ActionListener() {
 
@@ -746,7 +522,7 @@ public class GameStart extends JFrame {
 	// 접속 시 서버 연결 메서드.
 	private void connectServer() {
 		try {
-			socket = new Socket("localhost", 3000);
+			socket = new Socket("localhost", 9191);
 			ReaderThread rt = new ReaderThread();
 			rt.start();
 		} catch (Exception e) {
@@ -858,30 +634,6 @@ public class GameStart extends JFrame {
 						if (parsReaderMsg[1].equals("Black")) {
 							System.out.println("검은색 요청");
 							brush.setColor(Color.BLACK);
-						} else if (parsReaderMsg[1].equals("Red")) {
-							System.out.println("빨간색 요청");
-							brush.setColor(Color.RED);
-						} else if (parsReaderMsg[1].equals("Orange")) {
-							System.out.println("주황색 요청");
-							brush.setColor(Color.ORANGE);
-						} else if (parsReaderMsg[1].equals("Yellow")) {
-							System.out.println("노랑색 요청");
-							brush.setColor(Color.YELLOW);
-						} else if (parsReaderMsg[1].equals("Green")) {
-							System.out.println("초록색 요청");
-							brush.setColor(Color.GREEN);
-						} else if (parsReaderMsg[1].equals("Blue")) {
-							System.out.println("파랑색 요청");
-							brush.setColor(Color.CYAN);
-						} else if (parsReaderMsg[1].equals("Indigo")) {
-							System.out.println("인디고 위졋고 휘졋고 오졋고 요청");
-							brush.setColor(Color.BLUE);
-						} else if (parsReaderMsg[1].equals("Purple")) {
-							System.out.println("퍼플같은 핑크 요청");
-							brush.setColor(Color.PINK);
-						} else if (parsReaderMsg[1].equals("White")) {
-							System.out.println("지우개 요청");
-							brush.setColor(Color.WHITE);
 						} else if (parsReaderMsg[1].equals("Delete")) {
 							System.out.println("화면 리셋 요청");
 							brush.setClearC(false);
@@ -903,7 +655,7 @@ public class GameStart extends JFrame {
 						laQuiz.setText(problem[selectProblem]);
 						laQuiz.setVisible(true);
 						btnSkip.setVisible(true);
-						drawPPAP = true;
+						draw = true;
 						tfChat.setEnabled(false);
 						plBottom.setVisible(true);
 						System.out.println("내 턴 임");
@@ -912,10 +664,10 @@ public class GameStart extends JFrame {
 						btnSkip.setVisible(false);
 						System.out.println("내 턴 아님");
 						brush.setDrawPen(false);
-						drawPPAP = false;
+						draw = false;
 						tfChat.setEnabled(true);
 						plBottom.setVisible(false);
-						System.out.println(drawPPAP);
+						System.out.println(draw);
 					} else if (parsReaderMsg[0].equals("ANSWER")) {
 						selectProblem++;
 						if (selectProblem >= problem.length) {
@@ -929,7 +681,7 @@ public class GameStart extends JFrame {
 						btnSkip.setVisible(false);
 						btnReady.setVisible(true);
 						laQuiz.setVisible(false);
-						drawPPAP = true;
+						draw = true;
 					} else {
 						taChat.append("\n");
 					}
@@ -954,11 +706,11 @@ public class GameStart extends JFrame {
 			if (drawPen == true) {
 				g.setColor(color);
 				g.fillOval(xx - 10, yy - 10, 10, 10);
-				System.out.println(drawPPAP);
+				System.out.println(draw);
 			} else if (drawPen == false) {
 				g.setColor(Color.WHITE);
 				g.fillOval(0, 0, 0, 0);
-				System.out.println(drawPPAP);
+				System.out.println(draw);
 				System.out.println("브러쉬 사용 못 하게 막음");
 			}
 			if (clearC == true) {
